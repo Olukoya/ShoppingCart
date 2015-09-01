@@ -17,7 +17,7 @@ import customTools.DBUtil;
  */
 @WebServlet("/ProductList")
 public class ProductList extends HttpServlet {
-	static String pName;
+	static long pID;
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -49,16 +49,18 @@ protected void doPost(HttpServletRequest req,HttpServletResponse res)throws Serv
     
     line += 
 			"<tr>" 
+			+"<th>" + "Product ID" + "</th> <br>"
 			+"<th>" + "Product" + "</th> <br>"
 			+"<th>" + "Price" + "</th> <br>"
 			+ "</tr>"
 			;
 
     for(int i=0; i<Insert.selectProduct().size(); i++){
-    	 pName = Insert.selectProduct().get(i).getProductName();
+    	 pID = Insert.selectProduct().get(i).getProductCode();
 	
     	line += "<tr>" 
-    			+"<td>" +"<a href =" +"\"Read?pName=" +pName+"\""+">"+ pName +"</a>"+"</td>"
+    			+"<td>" +"<a href =" +"\"ProductDetails?pID=" +pID+"\""+">"+ pID +"</a>"+"</td>"
+    			+"<td>" + Insert.selectProduct().get(i).getProductName()+ "</td>"
     			+"<td>" + Insert.selectProduct().get(i).getProductPrice()+ "</td>"
     			+"</tr>"
     	        ;

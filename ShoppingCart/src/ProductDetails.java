@@ -1,6 +1,8 @@
 
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -8,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.ShoppingCart;
 import customTools.DBUtil;
@@ -32,17 +35,26 @@ public class ProductDetails extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		
-		String oneProduct = req.getParameter("pName");
+
+		String oneProduct = req.getParameter("pID");
+		long product1 = Long.parseLong(oneProduct);
 		if (oneProduct != null)
 		{
 			EntityManager emf = DBUtil.getEmFactory().createEntityManager();
-				model.ShoppingCart product = new ShoppingCart();
-				
+			//	model.ShoppingCart product = new ShoppingCart();
+				model.ShoppingCart product = emf.createQuery("SELECT s FROM ShoppingCart s where s.productCode = :productCode",model.ShoppingCart.class).setParameter("productCode",product1).getSingleResult();				
 			long code= product.getProductCode();
 			String name= product.getProductName();
 			String desc= product.getProductDescription();
 			double price= product.getProductPrice();
 			
+			HttpSession session = req.getSession();
+			
+			session.setAttribute("productCode", product1);
+			session.setAttribute("productName", name);
+			session.setAttribute("productDescription", desc);
+			session.setAttribute("productPrice", price);
+		
             
 			// get the list of values to display
 			String details = "<table class=" 

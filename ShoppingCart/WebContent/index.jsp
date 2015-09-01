@@ -26,6 +26,5 @@
 	</div>
   </form>
 </div> 
-${content1}
 </body>
 </html>
