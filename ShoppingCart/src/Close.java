@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.CartdbTemp;
+import model.OrderDb;
 import customTools.DBUtil;
 
 /**
@@ -33,8 +34,10 @@ public class Close extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+    
+	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    	req.getSession().invalidate();
+        res.sendRedirect(req.getContextPath() + "/index.jsp");
 	}
 
 	/**
@@ -43,30 +46,41 @@ public class Close extends HttpServlet {
 	protected void doPost(HttpServletRequest req,HttpServletResponse res)throws ServletException,IOException
 	{
 		
+		HttpSession session = req.getSession();
+		String user= (String) session.getAttribute("username");
+		
+		double gTotal=0, tax=0, fullTotal=0;
+		String total ="";
+		
 		EntityManager emf = DBUtil.getEmFactory().createEntityManager();		
 		model.CartdbTemp cart = new CartdbTemp();
-		HttpSession session = req.getSession();
+		model.OrderDb order = new OrderDb();
+		HttpSession sessionP = req.getSession();
 		
 		String quantityString = req.getParameter("quantity");
 		Integer quantity = Integer.parseInt(quantityString);
-		long code = (long) session.getAttribute("productCode");
+		long code = (long) sessionP.getAttribute("productCode");
 		String codeString = Long.toString(code);
-		String name = (String) session.getAttribute("productName");
-		double price = (double) session.getAttribute("productPrice");
+		String name = (String) sessionP.getAttribute("productName");
+		double price = (double) sessionP.getAttribute("productPrice");
 		String priceString = Double.toString(price);
 		double subTotal = quantity*price;
 		String subTotalString= Double.toString(subTotal);
 		
-		cart.setPCode((int) code);
-		cart.setPName(name);
-		cart.setPPrice(price);
-		cart.setPQty(quantity);
-		cart.setPSub(subTotal);
 		
-		Insert.insertCart(cart);
-		List<String> cartList = Arrays.asList(codeString,name,priceString,quantityString,subTotalString);
+		order.setPCode(cart.getPCode());
+		order.setPName(cart.getPName());
+		order.setPPrice(cart.getPPrice());
+		order.setPQty(cart.getPQty());
+		order.setPSub(cart.getPSub());
 		
-		System.err.println(" To check if the list prints : " +cartList);
+		order.setUserId(user);
+		Insert.insertOrder(order);
+		Insert.deleteCart(cart);
+		
+		List<String> orderList = Arrays.asList(codeString,name,priceString,quantityString,subTotalString);
+		
+		System.err.println(" To check if the list prints : " +orderList);
 
 		
 		// get the list of values to display
@@ -85,16 +99,19 @@ public class Close extends HttpServlet {
 				+ "</tr>"
 				;
 	    
-	    for(int i=0; i<Insert.selectCart().size(); i++){
+	    for(int i=0; i<Insert.selectOrder().size(); i++){
 	    	
-	    	gTotal+=Insert.selectCart().get(i).getPSub();
+	    	gTotal+=Insert.selectOrder().get(i).getPSub();
+	    	tax+= Insert.selectOrder().get(i).getPSub() *0.06;
+	    	fullTotal=gTotal+tax;
+	    	
 		
 	    	line += "<tr>" 
-	    			+"<td>" +Insert.selectCart().get(i).getPCode()+"</td>"
-	    			+"<td>" + Insert.selectCart().get(i).getPName()+ "</td>"
-	    			+"<td>" + Insert.selectCart().get(i).getPPrice()+ "</td>"
-	    			+"<td>" + Insert.selectCart().get(i).getPQty()+ "</td>"
-	    			+"<td>" + Insert.selectCart().get(i).getPSub()+ "</td>"
+	    			+"<td>" +Insert.selectOrder().get(i).getPCode()+"</td>"
+	    			+"<td>" + Insert.selectOrder().get(i).getPName()+ "</td>"
+	    			+"<td>" + Insert.selectOrder().get(i).getPPrice()+ "</td>"
+	    			+"<td>" + Insert.selectOrder().get(i).getPQty()+ "</td>"
+	    			+"<td>" + Insert.selectOrder().get(i).getPSub()+ "</td>"
 	    			+"</tr>"
 	    	        ;
 	    	}
@@ -106,19 +123,23 @@ public class Close extends HttpServlet {
 	    
 	    total += 
 				"<tr>" 
+				+"<th>" + "Total" + "</th> <br>"
+				+"<th>" + "Tax" + "</th> <br>"
 				+"<th>" + "Grand Total" + "</th> <br>"
 				+ "</tr>"
 				;
 
 	    total += "<tr>" 
     			+"<td>" +gTotal+"</td>"
+    			+"<td>" +tax+"</td>"
+    			+"<td>" +fullTotal+"</td>"
     			+"</tr>"
     	        ;
 	    total += "</table>";
 	    
 		req.setAttribute("message", line);
 		req.setAttribute("message2", total);
-		getServletContext().getRequestDispatcher("/Checkout.jsp").forward(req, res);
+		getServletContext().getRequestDispatcher("/Logout.jsp").forward(req, res);
 		
 	}
 

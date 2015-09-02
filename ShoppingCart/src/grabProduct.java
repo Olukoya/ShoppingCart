@@ -1,4 +1,6 @@
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import model.UserProfile;
 import customTools.DBUtil;
 
 public class grabProduct {
@@ -14,4 +16,33 @@ public class grabProduct {
 			System.out.println("cerrado!");
 		}
 	}
+	
+	public static boolean validity (String username, String password) {
+		String userMessage = "SELECT u FROM UserProfile u WHERE u.username = :username and u.userPassword = :password";
+		EntityManager emf = DBUtil.getEmFactory().createEntityManager();
+		TypedQuery<UserProfile> user = emf.createQuery(userMessage,UserProfile.class);
+		
+		user.setParameter("username", username);
+		user.setParameter("password", password);
+
+		boolean valid = false;
+		try {
+			
+			if (user.getSingleResult().getUsername().equalsIgnoreCase(username) &&	user.getSingleResult().getUserPassword().equals(password))
+			{
+				valid = true;
+			}	
+			System.out.println(valid);
+			
+		} catch (Exception e){
+			System.out.println(e);
+		} finally {
+			emf.close();
+		}
+		return valid;
+		
+		
+	}
+	
+	
 }

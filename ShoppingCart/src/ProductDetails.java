@@ -34,6 +34,8 @@ public class ProductDetails extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		session.getAttribute("username");
 		
 
 		String oneProduct = req.getParameter("pID");
@@ -48,12 +50,12 @@ public class ProductDetails extends HttpServlet {
 			String desc= product.getProductDescription();
 			double price= product.getProductPrice();
 			
-			HttpSession session = req.getSession();
+			HttpSession sessionP = req.getSession();
 			
-			session.setAttribute("productCode", product1);
-			session.setAttribute("productName", name);
-			session.setAttribute("productDescription", desc);
-			session.setAttribute("productPrice", price);
+			sessionP.setAttribute("productCode", product1);
+			sessionP.setAttribute("productName", name);
+			sessionP.setAttribute("productDescription", desc);
+			sessionP.setAttribute("productPrice", price);
 		
             
 			// get the list of values to display
@@ -90,7 +92,68 @@ public class ProductDetails extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		String user;
+		String total="";
+		double gTotal=0;
 		// TODO Auto-generated method stub
+		
+		HttpSession session = req.getSession();
+		user = (String) session.getAttribute("username");
+		EntityManager emf = DBUtil.getEmFactory().createEntityManager();
+		List <model.CartdbTemp> cart = emf.createQuery("SELECT c FROM CartdbTemp c where c.userId = :userId",model.CartdbTemp.class).setParameter("userId",user).getResultList();				
+
+		// get the list of values to display
+		String line = "<table class=" 
+	    		+ "\"table table-striped\"" 
+	    		+ "style=width:60%>";
+	    
+	    line += 
+				"<tr>" 
+				+"<th>" + "Product Code" + "</th> <br>"
+				+"<th>" + "Product" + "</th> <br>"
+				+"<th>" + "Item Price" + "</th> <br>"
+				+"<th>" + "Quantity" + "</th> <br>"
+				+"<th>" + "Subtotal" + "</th> <br>"
+			//	+"<th>" + "Price" + "</th> <br>"
+				+ "</tr>"
+				;
+	    
+	    for(int i=0; i< cart.size(); i++){
+	    	
+	    	gTotal+=cart.get(i).getPSub();
+		
+	    	line += "<tr>" 
+	    			+"<td>" +cart.get(i).getPCode()+"</td>"
+	    			+"<td>" +cart.get(i).getPName()+ "</td>"
+	    			+"<td>" +cart.get(i).getPPrice()+ "</td>"
+	    			+"<td>" +cart.get(i).getPQty()+ "</td>"
+	    			+"<td>" +cart.get(i).getPSub()+ "</td>"
+	    			+"</tr>"
+	    	        ;
+	    	}
+	    line += "</table>";
+	    
+	    total += "<table class=" 
+	    		+ "\"table table-striped\"" 
+	    		+ "style=width:60%>";
+	    
+	    total += 
+				"<tr>" 
+				+"<th>" + "Grand Total" + "</th> <br>"
+				+ "</tr>"
+				;
+
+	    total += "<tr>" 
+    			+"<td>" +gTotal+"</td>"
+    			+"</tr>"
+    	        ;
+	    total += "</table>";
+	    
+		req.setAttribute("message", line);
+		req.setAttribute("message2", total);
+		getServletContext().getRequestDispatcher("/Checkout.jsp").forward(req, res);
+		
+		
 	}
 
 }

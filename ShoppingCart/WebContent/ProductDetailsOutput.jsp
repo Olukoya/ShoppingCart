@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+<%@ page import ="javax.servlet.http.HttpSession" %>
+
+<% String user= (String) session.getAttribute("username");%>
 <head>
   <title>Product Details</title>
   <meta charset="utf-8">
@@ -16,17 +19,17 @@
     <div class="navbar-header">
       <a class="navbar-brand" href="index.jsp">Product Details</a>
     </div>
-    <%-- Comment --%>
-    <%--
-    <div>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="Signup.jsp"><span class="glyphicon glyphicon-user"></span> Sign-up</a></li>
-        <li><a href="Login.jsp"><span class="glyphicon glyphicon-user"></span> Login</a></li>
-      </ul>
-    </div>
-    --%>
+   <div>
+<form action = "ProductDetails" method="post">
+ <div class="form-group">
+ 	<button style="float: right" type="submit" class="glyphicon glyphicon-shopping-cart" name="view" id="view"></button>
+	</div>
+  </form>
+</div>
   </div>
+  
 </nav>
+
 <div class="container-fluid">
 ${message}
 </div>

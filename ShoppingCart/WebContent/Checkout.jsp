@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+<%@ page import ="javax.servlet.http.HttpSession" %>
+
+<% String user= (String) session.getAttribute("username");%>
 <head>
   <title>Checkout</title>
   <meta charset="utf-8">
@@ -34,7 +37,12 @@ ${message2}
 <div class="container-fluid">
    <form name="checkout" action="Close" method="POST">
     <div style="text-align:center" class="form-group">
- 	<button type="submit" class="btn btn-primary btn-md" name="checkout" id="checkout">Checkout</button>
+ 	<button type="submit" class="btn btn-primary btn-md" name="checkout" id="checkout">Pay and Checkout</button>
+	</div>
+  </form>
+  <form name="checkout" action="Close" method="GET">
+    <div style="text-align:center" class="form-group">
+ 	<button type="submit" class="btn btn-primary btn-md" name="checkout" id="checkout">Logout</button>
 	</div>
   </form>
   <form name="continue" action="ProductList" method="POST">

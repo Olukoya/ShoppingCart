@@ -34,8 +34,10 @@ public class Cart extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		HttpSession session = req.getSession();
+		session.getAttribute("username");
 	}
 
 	/**
@@ -43,28 +45,35 @@ public class Cart extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest req,HttpServletResponse res)throws ServletException,IOException
 	{
+		
+		HttpSession session = req.getSession();
+		session.getAttribute("username");
+		
 		double gTotal=0;
 		String total ="";
 		EntityManager emf = DBUtil.getEmFactory().createEntityManager();		
 		model.CartdbTemp cart = new CartdbTemp();
-		HttpSession session = req.getSession();
+		HttpSession sessionP = req.getSession();
 		
 		String quantityString = req.getParameter("quantity");
 		Integer quantity = Integer.parseInt(quantityString);
-		long code = (long) session.getAttribute("productCode");
+		long code = (long) sessionP.getAttribute("productCode");
 		String codeString = Long.toString(code);
-		String name = (String) session.getAttribute("productName");
-		double price = (double) session.getAttribute("productPrice");
+		String name = (String) sessionP.getAttribute("productName");
+		double price = (double) sessionP.getAttribute("productPrice");
 		String priceString = Double.toString(price);
 		double subTotal = quantity*price;
 		String subTotalString= Double.toString(subTotal);
 		
+		System.out.println(session.getAttribute("username"));
 		cart.setPCode((int) code);
 		cart.setPName(name);
 		cart.setPPrice(price);
 		cart.setPQty(quantity);
 		cart.setPSub(subTotal);
+		cart.setUserId((String)session.getAttribute("username"));
 		
+
 		Insert.insertCart(cart);
 		List<String> cartList = Arrays.asList(codeString,name,priceString,quantityString,subTotalString);
 		

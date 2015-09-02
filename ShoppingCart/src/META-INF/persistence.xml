@@ -3,6 +3,8 @@
 	<persistence-unit name="ShoppingCart" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<class>model.ShoppingCart</class>
+		<class>model.UserProfile</class>
+		<class>model.OrderDb</class>
 		<class>model.CartdbTemp</class>
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		<properties>

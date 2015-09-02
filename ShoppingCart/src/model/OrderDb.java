@@ -5,13 +5,13 @@ import javax.persistence.*;
 
 
 /**
- * The persistent class for the CARTDB_TEMP database table.
+ * The persistent class for the ORDER_DB database table.
  * 
  */
 @Entity
-@Table(name="CARTDB_TEMP", schema="TESTDB")
-@NamedQuery(name="CartdbTemp.findAll", query="SELECT c FROM CartdbTemp c")
-public class CartdbTemp implements Serializable {
+@Table(name="ORDER_DB")
+@NamedQuery(name="OrderDb.findAll", query="SELECT o FROM OrderDb o")
+public class OrderDb implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -25,7 +25,7 @@ public class CartdbTemp implements Serializable {
 	private String pName;
 
 	@Column(name="P_PRICE")
-	private double pPrice;
+	private Double pPrice;
 
 	@Column(name="P_QTY")
 	private int pQty;
@@ -36,7 +36,7 @@ public class CartdbTemp implements Serializable {
 	@Column(name="USER_ID")
 	private String userId;
 
-	public CartdbTemp() {
+	public OrderDb() {
 	}
 
 	public long getPId() {
@@ -63,11 +63,11 @@ public class CartdbTemp implements Serializable {
 		this.pName = pName;
 	}
 
-	public double getPPrice() {
+	public Double getPPrice() {
 		return this.pPrice;
 	}
 
-	public void setPPrice(double pPrice) {
+	public void setPPrice(Double pPrice) {
 		this.pPrice = pPrice;
 	}
 
