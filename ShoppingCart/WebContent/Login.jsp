@@ -28,7 +28,7 @@
 
 <div class="container">
   <h2>Login Form</h2>
-   <form name="loginForm" action="ProductList" method="post">
+   <form name="loginForm" action="LoginProcess" method="post">
     <div class="form-group">
       <label for="username">Username: </label>
 	  <input type="text" class="form-control" id="username" name= "username">
@@ -60,7 +60,7 @@
   </div>
 </nav>
 <div class="container">
-   <form name="view" action="ProductList" method="POST">
+   <form name="view" action="LoginProcess" method="POST">
     <div class="form-group">
  	<button type="submit" class="btn btn-primary btn-md" name="view" id="view">View Items</button>
 

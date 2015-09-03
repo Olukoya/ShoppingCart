@@ -117,7 +117,7 @@ public class Cart extends HttpServlet {
 	    
 	    total += 
 				"<tr>" 
-				+"<th>" + "Grand Total" + "</th> <br>"
+				+"<th>" + "Total" + "</th> <br>"
 				+ "</tr>"
 				;
 

@@ -9,7 +9,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="ORDER_DB")
+@Table(name="ORDER_DB", schema= "TESTDB")
 @NamedQuery(name="OrderDb.findAll", query="SELECT o FROM OrderDb o")
 public class OrderDb implements Serializable {
 	private static final long serialVersionUID = 1L;

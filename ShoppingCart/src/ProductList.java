@@ -53,93 +53,54 @@ public class ProductList extends HttpServlet {
 	}
 
 protected void doPost(HttpServletRequest req,HttpServletResponse res)throws ServletException,IOException
-{ //error here whem continue shopping. Does not get session
-	System.out.println("In product list");
-	
-	boolean login = grabProduct.validity(req.getParameter("username"), req.getParameter("password"));
-	if (login == true){
-	
-		EntityManager emf = DBUtil.getEmFactory().createEntityManager();
-	
-		model.ShoppingCart products = new ShoppingCart();
-	
-	
-	// get the list of values to display
-	    String line = "<table class=" 
-	    		+ "\"table table-striped\"" 
-	    		+ "style=width:60%>";
-	    
-	    line += 
-				"<tr>" 
-				+"<th>" + "Product ID" + "</th> <br>"
-				+"<th>" + "Product" + "</th> <br>"
-				+"<th>" + "Price" + "</th> <br>"
-				+ "</tr>"
-				;
-	
-	    for(int i=0; i<Insert.selectProduct().size(); i++){
-	    	 pID = Insert.selectProduct().get(i).getProductCode();
-		
-	    	line += "<tr>" 
-	    			+"<td>" +"<a href =" +"\"ProductDetails?pID=" +pID+"\""+">"+ pID +"</a>"+"</td>"
-	    			+"<td>" + Insert.selectProduct().get(i).getProductName()+ "</td>"
-	    			+"<td>" + Insert.selectProduct().get(i).getProductPrice()+ "</td>"
-	    			+"</tr>"
-	    	        ;
-	    	}
-	    
-	    	line += "</table>";
-		req.setAttribute("message", line);
-		getServletContext().getRequestDispatcher("/ProductListOutput.jsp").forward(req, res);
-		
-		}
-		
-	}
-
-protected void doProcess(HttpServletRequest req,HttpServletResponse res)throws ServletException,IOException
-{ //error here whem continue shopping. Does not get session
-	System.out.println("In product list");
+{ 
 	HttpSession session = req.getSession();
-	session.setAttribute("username", req.getParameter("username"));
-	session.setAttribute("password", req.getParameter("password"));
+	session.getAttribute("username");
+	//continue shopping should come here
+	System.out.println("In product list");
 	
-	boolean login = grabProduct.validity(req.getParameter("username"), req.getParameter("password"));
-	if (login == true){
+//	boolean login = grabProduct.validity(req.getParameter("username"), req.getParameter("password"));
+//	if (login == true){
 	
-		EntityManager emf = DBUtil.getEmFactory().createEntityManager();
-	
-		model.ShoppingCart products = new ShoppingCart();
-	
-	
-	// get the list of values to display
-	    String line = "<table class=" 
-	    		+ "\"table table-striped\"" 
-	    		+ "style=width:60%>";
-	    
-	    line += 
-				"<tr>" 
-				+"<th>" + "Product ID" + "</th> <br>"
-				+"<th>" + "Product" + "</th> <br>"
-				+"<th>" + "Price" + "</th> <br>"
-				+ "</tr>"
-				;
-	
-	    for(int i=0; i<Insert.selectProduct().size(); i++){
-	    	 pID = Insert.selectProduct().get(i).getProductCode();
-		
-	    	line += "<tr>" 
-	    			+"<td>" +"<a href =" +"\"ProductDetails?pID=" +pID+"\""+">"+ pID +"</a>"+"</td>"
-	    			+"<td>" + Insert.selectProduct().get(i).getProductName()+ "</td>"
-	    			+"<td>" + Insert.selectProduct().get(i).getProductPrice()+ "</td>"
-	    			+"</tr>"
-	    	        ;
-	    	}
-	    
-	    	line += "</table>";
-		req.setAttribute("message", line);
-		getServletContext().getRequestDispatcher("/ProductListOutput.jsp").forward(req, res);
-		
+		try {
+			EntityManager emf = DBUtil.getEmFactory().createEntityManager();
+
+			model.ShoppingCart products = new ShoppingCart();
+
+
+// get the list of values to display
+			String line = "<table class=" 
+					+ "\"table table-striped\"" 
+					+ "style=width:60%>";
+			
+			line += 
+					"<tr>" 
+					+"<th>" + "Product ID" + "</th> <br>"
+					+"<th>" + "Product" + "</th> <br>"
+					+"<th>" + "Price" + "</th> <br>"
+					+ "</tr>"
+					;
+
+			for(int i=0; i<Insert.selectProduct().size(); i++){
+				 pID = Insert.selectProduct().get(i).getProductCode();
+			
+				line += "<tr>" 
+						+"<td>" +"<a href =" +"\"ProductDetails?pID=" +pID+"\""+">"+ pID +"</a>"+"</td>"
+						+"<td>" + Insert.selectProduct().get(i).getProductName()+ "</td>"
+						+"<td>" + Insert.selectProduct().get(i).getProductPrice()+ "</td>"
+						+"</tr>"
+				        ;
+				}
+			
+				line += "</table>";
+			req.setAttribute("message", line);
+			getServletContext().getRequestDispatcher("/ProductListOutput.jsp").forward(req, res);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+	//	}
 		
 	}
 	
